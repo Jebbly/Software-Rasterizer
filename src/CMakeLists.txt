@@ -1,5 +1,7 @@
 file(GLOB CPU_RASTERIZER_SOURCES
     main.cpp
+    model.cpp
+    renderer.cpp
 )
 
 add_executable(${PROJECT_NAME} ${CPU_RASTERIZER_SOURCES})
