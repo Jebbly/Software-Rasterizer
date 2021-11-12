@@ -7,17 +7,17 @@
 
 class Renderer {
 public:
-    // constructor initializes the resolution
-    Renderer(size_t width, size_t height, const std::string& filepath);
-    void Run();
+  // constructor initializes the resolution
+  Renderer(size_t width, size_t height, const std::string &filepath);
+  void Run();
 
 private:
-    Model model_;
-    size_t width_, height_;
-    bool close_;
+  Model model_;
+  size_t width_, height_;
+  bool close_;
 
-    void ProcessInput();
-    void Draw();
+  void ProcessInput();
+  void Draw();
 };
 
 #endif // RENDERER_HPP
