@@ -1,4 +1,5 @@
 file(GLOB CPU_RASTERIZER_SOURCES
+    camera.cpp
     main.cpp
     model.cpp
     renderer.cpp
