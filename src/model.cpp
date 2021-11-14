@@ -1,7 +1,13 @@
 #include "model.hpp"
 
 Model::Model(const std::string &filepath) {
-  // test if glm works
-  std::cout << "Processing " << filepath << std::endl;
-  vertices_.push_back(glm::vec3{0.0, 0.0, 0.0});
+  // compute vertices from tinyobjloader
+}
+
+const glm::vec3& Model::GetMaxPosition() const {
+  return max_pos_;
+}
+
+const glm::vec3& Model::GetMinPosition() const {
+  return min_pos_;
 }
