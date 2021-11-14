@@ -1,23 +1,30 @@
 #ifndef RENDERER_HPP
 #define RENDERER_HPP
 
+#include "camera.hpp"
 #include "model.hpp"
 #include <iostream>
 #include <string>
 
+constexpr int WIDTH = 800;
+constexpr int HEIGHT = 600;
+
 class Renderer {
 public:
-  // constructor initializes the resolution
-  Renderer(size_t width, size_t height, const std::string &filepath);
-  void Run();
+    // constructor initializes the resolution
+    Renderer(const std::string& filepath);
+    void Run();
 
 private:
-  Model model_;
-  size_t width_, height_;
-  bool close_;
+    Model model_;
+    Camera camera_;
+    bool close_;
 
-  void ProcessInput();
-  void Draw();
+    const float translation_speed_ = 1.0;
+    const float rotation_speed_ = 1.0;
+
+    void ProcessInput();
+    void Draw();
 };
 
 #endif // RENDERER_HPP

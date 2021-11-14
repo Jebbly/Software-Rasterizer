@@ -12,6 +12,6 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  Renderer renderer{800, 600, argv[1]};
+  Renderer renderer{argv[1]};
   renderer.Run();
 }

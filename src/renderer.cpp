@@ -1,7 +1,15 @@
 #include "renderer.hpp"
 
-Renderer::Renderer(size_t width, size_t height, const std::string &filepath)
-    : width_{width}, height_{height}, model_{filepath}, close_{false} {}
+Renderer::Renderer(const std::string &filepath)
+    : model_{filepath}, close_{false} {
+    // set camera position based on model size
+    glm::vec3 max = model_.GetMaxPosition();
+    glm::vec3 min = model_.GetMinPosition();
+
+    camera_.TranslateX((max.x + min.x) / 2);
+    camera_.TranslateY((max.y + min.y) / 2);
+    camera_.TranslateZ(min.z - max.z);
+}
 
 void Renderer::Run() {
   while (!close_) {
