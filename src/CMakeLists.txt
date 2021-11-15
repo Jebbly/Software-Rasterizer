@@ -1,7 +1,9 @@
 file(GLOB CPU_RASTERIZER_SOURCES
-    camera.cpp
+    geometry/model.cpp
+    geometry/vertex.cpp
+    image/camera.cpp
+    image/framebuffer.cpp
     main.cpp
-    model.cpp
     renderer.cpp
 )
 
