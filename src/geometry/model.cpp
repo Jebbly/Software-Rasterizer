@@ -1,4 +1,4 @@
-#include "model.hpp"
+#include "geometry/model.hpp"
 
 Model::Model(const std::string &filepath) {
   // TO-DO: compute vertices from tinyobjloader

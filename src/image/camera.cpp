@@ -1,4 +1,4 @@
-#include "camera.hpp"
+#include "image/camera.hpp"
 
 Camera::Camera(const glm::vec3 &position, float yaw, float pitch)
     : position_{position}, yaw_{yaw}, pitch_{std::clamp(pitch, -89.0f, 89.0f)} {
@@ -21,7 +21,7 @@ void Camera::TranslateY(float magnitude) { position_ += up_ * magnitude; }
 
 void Camera::TranslateZ(float magnitude) { position_ += front_ * magnitude; }
 
-glm::mat4 Camera::LookAt() const {
+glm::mat4 Camera::GetViewMatrix() const {
   return glm::lookAt(position_, position_ + front_, up_);
 }
 

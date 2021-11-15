@@ -2,7 +2,7 @@
 
 Vertex operator*(const glm::mat4 &matrix, const Vertex &vertex) {
   Vertex product;
-  product.position = (matrix * glm::vec4(vertex.position, 1)).xyz;
+  product.position = matrix * glm::vec4(vertex.position, 1);
   // TO-DO: Calculate transformed normal
   return product;
 }
