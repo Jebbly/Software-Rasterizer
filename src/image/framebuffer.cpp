@@ -11,6 +11,15 @@ Framebuffer::Framebuffer() {
 
 void Framebuffer::Display() const {
   // TO-DO: implement display method for framebuffer
+  while (true) {
+    for (size_t row = 0; row < WIDTH; row++) {
+      for (size_t col = 0; col < HEIGHT; col++) {
+        std::cout << color_[row][col];
+      } 
+      std::cout << std::endl;
+    }
+    system("CLS");
+  }
 }
 
 char &Framebuffer::ColorAt(int x, int y) {

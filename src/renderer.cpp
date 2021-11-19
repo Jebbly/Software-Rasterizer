@@ -8,7 +8,7 @@ Renderer::Renderer(const std::string &filepath)
 
   camera_.TranslateX((max.x + min.x) / 2);
   camera_.TranslateY((max.y + min.y) / 2);
-  camera_.TranslateZ(min.z - max.z);
+  camera_.TranslateZ((min.z - max.z) + 2);
 }
 
 void Renderer::Run() {
@@ -36,4 +36,17 @@ void Renderer::Draw() {
 
     // TO-DO: iterate through pixels to check triangle coverage
   }
+}
+
+// this function assumes that the vertex is already in camera space
+void Renderer::ProjectToScreenSpace(glm::vec3& vertex) const {
+  vertex.x = vertex.x / vertex.z;
+  vertex.y = vertex.y / vertex.z;
+  vertex.z = -vertex.z;
+}
+
+// this function assumes that the vertex is already in screen space
+void Renderer::ScreenSpaceToNDC(glm::vec3& coords) const {
+  // TO-DO: implement NDC based on screen space coords
+  // max screen-space coords should depend on camera config
 }
