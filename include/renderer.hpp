@@ -10,7 +10,6 @@
 
 class Renderer {
 public:
-  // constructor initializes the resolution
   Renderer(const std::string &filepath);
   void Run();
 
@@ -22,6 +21,9 @@ private:
 
   void ProcessInput();
   void Draw();
+
+  void ProjectToScreenSpace(glm::vec3& vertex) const;
+  void ScreenSpaceToNDC(glm::vec3& coords) const;
 };
 
 #endif // RENDERER_HPP
