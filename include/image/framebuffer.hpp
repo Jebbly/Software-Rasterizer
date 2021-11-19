@@ -4,6 +4,8 @@
 #include "geometry/vertex.hpp"
 #include <limits>
 #include <stdexcept>
+#include <stdlib.h>
+#include <iostream>
 
 constexpr int WIDTH = 800;
 constexpr int HEIGHT = 600;
