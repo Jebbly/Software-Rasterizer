@@ -7,6 +7,16 @@ add_subdirectory(external)
 
 include_directories(include)
 
-add_subdirectory(src)
+file(GLOB CPU_RASTERIZER_SOURCES
+    src/geometry/model.cpp
+    src/geometry/vertex.cpp
+    src/image/camera.cpp
+    src/image/framebuffer.cpp
+    src/renderer.cpp
+)
 
-add_subdirectory(test)
+add_executable(${PROJECT_NAME} src/main.cpp ${CPU_RASTERIZER_SOURCES})
+target_link_libraries(${PROJECT_NAME} PRIVATE glm_static tinyobjloader)
+
+add_executable(tests test/tests.cpp ${CPU_RASTERIZER_SOURCES})
+target_link_libraries(tests PRIVATE Catch2WithMain glm_static tinyobjloader)

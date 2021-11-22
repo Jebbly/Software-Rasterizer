@@ -16,6 +16,7 @@ public:
 
   void Display() const;
 
+  // index from (0, 0) at bottom-left
   char &ColorAt(int x, int y);
   float &DepthAt(int x, int y);
 

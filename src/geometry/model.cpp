@@ -2,12 +2,10 @@
 
 Model::Model(const std::string &filepath) {
   // TO-DO: compute vertices from tinyobjloader
-
-//test with one triangle only
   Vertex v1, v2, v3;
   v1.position = glm::vec3(0, 1, 0);
-  v2.position = glm::vec3(1, 0, 0);
-  v3.position = glm::vec3(-1, 0, 0);
+  v2.position = glm::vec3(-2, 0.5, 0);
+  v3.position = glm::vec3(1, 0, 0);
   vertices_.push_back(v1);
   vertices_.push_back(v2);
   vertices_.push_back(v3);
