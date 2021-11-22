@@ -6,9 +6,12 @@ Renderer::Renderer(const std::string &filepath)
   glm::vec3 max = model_.GetMaxPosition();
   glm::vec3 min = model_.GetMinPosition();
 
+  // move to rough average of model
+  // and look down the negative Z-axis
   camera_.TranslateX((max.x + min.x) / 2);
   camera_.TranslateY((max.y + min.y) / 2);
-  camera_.TranslateZ((min.z - max.z) - 15);
+  camera_.TranslateZ(max.z + 15);
+  camera_.RotateX(180);
 }
 
 void Renderer::Run() {
@@ -59,13 +62,13 @@ void Renderer::Draw() {
     // only need to iterate through the bounding box of the triangle
     for (int y = min_coord.y; y <= max_coord.y; y++) {
       for (int x = min_coord.x; x <= max_coord.x; x++) {
-        // test if pixel is inside of boundaries
         glm::vec2 pixel{x, y};
-
+        
+        // test if pixel is inside of boundaries
         float weights[3];
         bool inside_triangle = true;
         for (size_t i = 0; i < 3; i++) {
-          weights[i] = EdgeFunction(coords[i], coords[(i + 1) % 3], pixel) + 0.001;
+          weights[i] = EdgeFunction(coords[i], coords[(i + 1) % 3], pixel) + 0.0001;
           if (weights[i] < 0) {
             inside_triangle = false;
             break;
@@ -79,7 +82,7 @@ void Renderer::Draw() {
           float depth = 0;
           for (size_t i = 0; i < 3; i++) {
             weights[i] /= area;
-            depth += weights[i] * triangle[i].position.z;
+            depth += weights[i] * coords[i].z;
           }
 
           if (depth < buffer_.DepthAt(x, y)) {
@@ -88,7 +91,8 @@ void Renderer::Draw() {
               position += weights[i] * triangle[i].position;
               normal += weights[i] * triangle[i].normal;
             }
-            buffer_.ColorAt(x, y) = Shade(position, normal);
+            buffer_.ColorAt(x, y) = Shade(position, glm::normalize(normal));
+            buffer_.DepthAt(x, y) = depth;
           }
         }
       }
@@ -103,7 +107,8 @@ glm::vec3 Renderer::ProjectToScreenSpace(const glm::vec3& vertex) const {
   glm::vec3 projected_vertex;
   projected_vertex.x = vertex.x / abs(vertex.z);
   projected_vertex.y = vertex.y / abs(vertex.z);
-  projected_vertex.z = vertex.z;
+  // TO-DO: better depth handling (involving clipping planes)
+  projected_vertex.z = -vertex.z;
   projected_vertex *= FOCAL_LENGTH;
   return projected_vertex;
 }
@@ -127,5 +132,11 @@ float Renderer::EdgeFunction(const glm::vec2& v1, const glm::vec2& v2, const glm
 }
 
 char Renderer::Shade(const glm::vec3& position, const glm::vec3& normal) const {
-  return '.';
+  const char palette[] = " .:-=+*#%@";
+
+  float ambient = 0.1;
+  glm::vec3 light_dir = glm::normalize(camera_.GetPosition() - position);
+  float diffuse = std::clamp(glm::dot(normal, glm::normalize(light_dir)), 0.f, 1.f);
+
+  return palette[std::clamp((int)(((ambient + diffuse) * 10) / (0.05 * glm::distance(camera_.GetPosition(), position))), 0, 9)];
 }

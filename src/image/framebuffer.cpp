@@ -11,7 +11,7 @@ Framebuffer::Framebuffer() {
 
   for (int y = 0; y < HEIGHT; y++) {
     for (int x = 0; x < WIDTH; x++) {
-      color_[y][x] = '@';
+      color_[y][x] = ' ';
       depth_[y][x] = std::numeric_limits<float>::max();
     }
   }

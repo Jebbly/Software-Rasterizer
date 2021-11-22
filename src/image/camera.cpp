@@ -25,6 +25,10 @@ glm::mat4 Camera::GetViewMatrix() const {
   return glm::lookAt(position_, position_ + front_, up_);
 }
 
+const glm::vec3& Camera::GetPosition() const {
+  return position_;
+}
+
 void Camera::ComputeDirectionalVectors() {
   // find camera direction based on position and target
   float yaw = glm::radians(yaw_);

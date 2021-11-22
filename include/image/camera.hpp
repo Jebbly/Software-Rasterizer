@@ -22,6 +22,7 @@ public:
   void TranslateZ(float magnitude);
 
   glm::mat4 GetViewMatrix() const;
+  const glm::vec3& GetPosition() const;
 
 private:
   glm::vec3 position_;
