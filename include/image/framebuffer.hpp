@@ -7,12 +7,16 @@
 #include <stdlib.h>
 #include <iostream>
 
-constexpr int WIDTH = 800;
-constexpr int HEIGHT = 600;
+#define CHARACTER_WIDTH 8
+#define CHARACTER_HEIGHT 20
+
+constexpr int WIDTH = 800 / CHARACTER_WIDTH;
+constexpr int HEIGHT = 600 / CHARACTER_HEIGHT;
 
 class Framebuffer {
 public:
   Framebuffer();
+  ~Framebuffer();
 
   void Display() const;
 
@@ -21,8 +25,8 @@ public:
   float &DepthAt(int x, int y);
 
 private:
-  char color_[WIDTH][HEIGHT];
-  float depth_[WIDTH][HEIGHT];
+  char** color_;
+  float** depth_;
 };
 
 #endif // FRAMEBUFFER_HPP

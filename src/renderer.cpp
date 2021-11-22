@@ -8,7 +8,7 @@ Renderer::Renderer(const std::string &filepath)
 
   camera_.TranslateX((max.x + min.x) / 2);
   camera_.TranslateY((max.y + min.y) / 2);
-  camera_.TranslateZ((min.z - max.z) - 2);
+  camera_.TranslateZ((min.z - max.z) - 15);
 }
 
 void Renderer::Run() {
@@ -40,32 +40,32 @@ void Renderer::Draw() {
 
       // if triangle is used, re-adjust triangle boundaries
       if (coords[i].x < min_coord.x) {
-        min_coord.x = coords[i].x;
+        min_coord.x = std::max<float>(coords[i].x, 0);
       } 
       
       if (coords[i].x > max_coord.x) {
-        max_coord.x = coords[i].x;
+        max_coord.x = std::min<float>(coords[i].x, WIDTH - 1);
       }
 
       if (coords[i].y < min_coord.y) {
-        min_coord.y = coords[i].y;
+        min_coord.y = std::max<float>(coords[i].y, 0);
       }
       
       if (coords[i].y > max_coord.y) {
-        max_coord.y = coords[i].y;
+        max_coord.y = std::min<float>(coords[i].y, HEIGHT - 1);
       }
     }
 
     // only need to iterate through the bounding box of the triangle
-    for (int y = min_coord.y; y <= max_coord.y; y += 25) {
-      for (int x = min_coord.x; x <= max_coord.x; x += 25) {
+    for (int y = min_coord.y; y <= max_coord.y; y++) {
+      for (int x = min_coord.x; x <= max_coord.x; x++) {
         // test if pixel is inside of boundaries
         glm::vec2 pixel{x, y};
 
         float weights[3];
         bool inside_triangle = true;
         for (size_t i = 0; i < 3; i++) {
-          weights[i] = EdgeFunction(coords[i], coords[(i + 1) % 3], pixel);
+          weights[i] = EdgeFunction(coords[i], coords[(i + 1) % 3], pixel) + 0.001;
           if (weights[i] < 0) {
             inside_triangle = false;
             break;
