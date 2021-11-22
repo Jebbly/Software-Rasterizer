@@ -8,10 +8,10 @@
 #include <iostream>
 
 #define CHARACTER_WIDTH 8
-#define CHARACTER_HEIGHT 20
+#define CHARACTER_HEIGHT 16
 
-constexpr int WIDTH = 800 / CHARACTER_WIDTH;
-constexpr int HEIGHT = 600 / CHARACTER_HEIGHT;
+constexpr int WIDTH = 1200 / CHARACTER_WIDTH;
+constexpr int HEIGHT = 800 / CHARACTER_HEIGHT;
 
 class Framebuffer {
 public:
