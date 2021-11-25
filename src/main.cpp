@@ -1,9 +1,4 @@
 #include <iostream>
-
-#include <glm/vec2.hpp>
-#define TINYOBJLOADER_IMPLEMENTATION
-#include <tiny_obj_loader.h>
-
 #include "renderer.hpp"
 
 int main(int argc, char *argv[]) {
@@ -12,6 +7,6 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  Renderer *renderer = new Renderer{"test"};
+  Renderer *renderer = new Renderer{argv[1]};
   renderer->Run();
 }
