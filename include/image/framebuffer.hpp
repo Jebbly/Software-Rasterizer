@@ -7,11 +7,12 @@
 #include <stdlib.h>
 #include <iostream>
 
-#define CHARACTER_WIDTH 8
-#define CHARACTER_HEIGHT 16
+constexpr int CHARACTER_WIDTH = 8;
+constexpr int CHARACTER_HEIGHT = 12;
+constexpr float CHARACTER_ASPECT_RATIO = ((float) CHARACTER_HEIGHT) / CHARACTER_WIDTH;
 
 constexpr int WIDTH = 1200 / CHARACTER_WIDTH;
-constexpr int HEIGHT = 800 / CHARACTER_HEIGHT;
+constexpr int HEIGHT = 600 / CHARACTER_HEIGHT;
 
 class Framebuffer {
 public:

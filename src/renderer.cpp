@@ -10,7 +10,7 @@ Renderer::Renderer(const std::string &filepath)
   // and look down the negative Z-axis
   camera_.TranslateX((max.x + min.x) / 2);
   camera_.TranslateY((max.y + min.y) / 2);
-  camera_.TranslateZ(max.z + 15);
+  camera_.TranslateZ(15);
   camera_.RotateX(180);
 }
 
@@ -86,11 +86,14 @@ void Renderer::Draw() {
           }
 
           if (depth < buffer_.DepthAt(x, y)) {
-            glm::vec3 position{0, 0, 0}, normal{0, 0, 0};
+            glm::vec3 position{0, 0, 0};
             for (size_t i = 0; i < 3; i++) {
               position += weights[i] * triangle[i].position;
-              normal += weights[i] * triangle[i].normal;
             }
+
+            glm::vec3 normal =
+                glm::cross(triangle[1].position - triangle[0].position,
+                           triangle[2].position - triangle[0].position);
             buffer_.ColorAt(x, y) = Shade(position, glm::normalize(normal));
             buffer_.DepthAt(x, y) = depth;
           }
@@ -105,7 +108,7 @@ void Renderer::Draw() {
 // this function assumes that the vertex is already in camera space
 glm::vec3 Renderer::ProjectToScreenSpace(const glm::vec3& vertex) const {
   glm::vec3 projected_vertex;
-  projected_vertex.x = vertex.x / abs(vertex.z);
+  projected_vertex.x = CHARACTER_ASPECT_RATIO * vertex.x / abs(vertex.z);
   projected_vertex.y = vertex.y / abs(vertex.z);
   // TO-DO: better depth handling (involving clipping planes)
   projected_vertex.z = -vertex.z;
@@ -128,15 +131,24 @@ glm::vec3 Renderer::ScreenSpaceToNDC(const glm::vec3& coords) const {
 float Renderer::EdgeFunction(const glm::vec2& v1, const glm::vec2& v2, const glm::vec2& p) const {
   glm::vec3 e1 = glm::vec3(p - v1, 0);
   glm::vec3 e2 = glm::vec3(v2 - v1, 0);
-  return glm::cross(e1, e2).z;
+  return -glm::cross(e1, e2).z;
 }
 
+// this function determines which character to represent the pixel
+// depending on the distance and orientation of the triangle
 char Renderer::Shade(const glm::vec3& position, const glm::vec3& normal) const {
-  const char palette[] = " .:-=+*#%@";
-
+  // any triangle should have a default minimum lighting
   float ambient = 0.1;
+
+  // find how directly the triangle is pointing at the light source
+  // light source currently is positioned at whereever the camera is
   glm::vec3 light_dir = glm::normalize(camera_.GetPosition() - position);
   float diffuse = std::clamp(glm::dot(normal, glm::normalize(light_dir)), 0.f, 1.f);
 
-  return palette[std::clamp((int)(((ambient + diffuse) * 10) / (0.05 * glm::distance(camera_.GetPosition(), position))), 0, 9)];
+  // find the distance from the light source
+  float attenuation = 1 / (0.04 * glm::distance(camera_.GetPosition(), position));
+
+  // index the ASCII palette according to brightness
+  const char palette[] = " .:-=+*#%@";
+  return palette[std::clamp((int)(((ambient + diffuse) * 10) * attenuation) , 0, 9)];
 }
