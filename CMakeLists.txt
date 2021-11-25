@@ -15,8 +15,11 @@ file(GLOB CPU_RASTERIZER_SOURCES
     src/renderer.cpp
 )
 
-add_executable(${PROJECT_NAME} src/main.cpp ${CPU_RASTERIZER_SOURCES})
-target_link_libraries(${PROJECT_NAME} PRIVATE glm_static tinyobjloader)
+add_library(cpu-rasterizer ${CPU_RASTERIZER_SOURCES})
+target_link_libraries(cpu-rasterizer PUBLIC glm_static tinyobjloader)
 
-add_executable(tests test/tests.cpp ${CPU_RASTERIZER_SOURCES})
-target_link_libraries(tests PRIVATE Catch2WithMain glm_static tinyobjloader)
+add_executable(exec src/main.cpp)
+target_link_libraries(exec PRIVATE cpu-rasterizer)
+
+add_executable(tests test/tests.cpp)
+target_link_libraries(tests PRIVATE cpu-rasterizer Catch2WithMain)
