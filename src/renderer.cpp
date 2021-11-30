@@ -10,7 +10,7 @@ Renderer::Renderer(const std::string &filepath)
   // and look down the negative Z-axis
   camera_.TranslateX((max.x + min.x) / 2);
   camera_.TranslateY((max.y + min.y) / 2);
-  camera_.TranslateZ(15);
+  camera_.TranslateZ(max.z + 15);
   camera_.RotateX(180);
 }
 
@@ -18,13 +18,11 @@ void Renderer::Run() {
   while (!close_) {
     ProcessInput();
     Draw();
-    break;
   }
 }
 
 void Renderer::ProcessInput() {
   // TO-DO: Process input for camera movement and closing the application
-  std::cout << "Process input here" << std::endl;
 }
 
 void Renderer::Draw() {
@@ -103,6 +101,7 @@ void Renderer::Draw() {
   }
 
   buffer_.Display();
+  buffer_.Clear();
 }
 
 // this function assumes that the vertex is already in camera space
@@ -137,18 +136,16 @@ float Renderer::EdgeFunction(const glm::vec2& v1, const glm::vec2& v2, const glm
 // this function determines which character to represent the pixel
 // depending on the distance and orientation of the triangle
 char Renderer::Shade(const glm::vec3& position, const glm::vec3& normal) const {
-  // any triangle should have a default minimum lighting
-  float ambient = 0.1;
-
   // find how directly the triangle is pointing at the light source
   // light source currently is positioned at whereever the camera is
-  glm::vec3 light_dir = glm::normalize(camera_.GetPosition() - position);
+  glm::vec3 light_pos = camera_.GetPosition();
+  glm::vec3 light_dir = glm::normalize(light_pos - position);
   float diffuse = std::clamp(glm::dot(normal, glm::normalize(light_dir)), 0.f, 1.f);
 
   // find the distance from the light source
-  float attenuation = 1 / (0.04 * glm::distance(camera_.GetPosition(), position));
+  float attenuation = 1 / (0.04 * glm::distance(light_pos, position));
 
   // index the ASCII palette according to brightness
-  const char palette[] = " .:-=+*#%@";
-  return palette[std::clamp((int)(((ambient + diffuse) * 10) * attenuation) , 0, 9)];
+  const std::string palette = " .:-=+*#%@";
+  return palette[std::clamp((int)(((diffuse) * palette.length()) * attenuation), 0, (int) palette.length() - 1)];
 }
