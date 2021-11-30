@@ -11,8 +11,8 @@ constexpr float ROTATION_SPEED = 1.0;
 
 class Camera {
 public:
-  Camera(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 0.0f), float yaw = 0,
-         float pitch = 0);
+  Camera(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 0.0f), 
+         float yaw = 0, float pitch = 0);
 
   void RotateX(float magnitude);
   void RotateY(float magnitude);
@@ -22,6 +22,7 @@ public:
   void TranslateZ(float magnitude);
 
   glm::mat4 GetViewMatrix() const;
+  const glm::vec3& GetPosition() const;
 
 private:
   glm::vec3 position_;
