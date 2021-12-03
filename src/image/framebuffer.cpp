@@ -1,4 +1,5 @@
 #include "image/framebuffer.hpp"
+#include <iostream>
 
 Framebuffer::Framebuffer() {
   for (int y = 0; y < HEIGHT; y++) {
@@ -29,8 +30,8 @@ char &Framebuffer::ColorAt(int x, int y) {
 }
 
 float &Framebuffer::DepthAt(int x, int y) {
-  if (x < 0 || x >= WIDTH || y < 0 || y > HEIGHT) {
-    throw std::runtime_error("Framebuffer depth index out of bounds!");
+  if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
+    throw std::runtime_error("Framebuffer depth index out of bounds");
   }
   int h = HEIGHT - 1 - y;
 

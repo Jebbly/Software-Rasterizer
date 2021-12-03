@@ -25,19 +25,23 @@ glm::mat4 Camera::GetViewMatrix() const {
   return glm::lookAt(position_, position_ + front_, up_);
 }
 
+const glm::vec3& Camera::GetPosition() const {
+  return position_;
+}
+
 void Camera::ComputeDirectionalVectors() {
   // find camera direction based on position and target
   float yaw = glm::radians(yaw_);
   float pitch = glm::radians(pitch_);
-  front_.x = cos(yaw) * cos(pitch);
+  front_.x = sin(yaw) * cos(pitch);
   front_.y = sin(pitch);
-  front_.z = sin(yaw) * cos(pitch);
+  front_.z = cos(yaw) * cos(pitch);
   front_ = glm::normalize(front_);
 
   // use arbitrary vector to cross with direction to obtain right vector
   glm::vec3 world_up = glm::vec3(0.0f, 1.0f, 0.0f);
-  right_ = glm::normalize(glm::cross(front_, world_up));
+  right_ = glm::normalize(glm::cross(world_up, front_));
 
   // cross right and direction to obtain up vector
-  up_ = glm::cross(right_, front_);
+  up_ = glm::cross(front_, right_);
 }
