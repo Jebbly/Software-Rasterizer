@@ -7,20 +7,20 @@
 #include <stdlib.h>
 #include <iostream>
 
-constexpr int WIDTH = 800;
-constexpr int HEIGHT = 600;
+constexpr int WIDTH = 100;
+constexpr int HEIGHT = 40;
 
 class Framebuffer {
 public:
   Framebuffer();
 
-  void Display() const;
+  friend std::ostream& operator<<(std::ostream& os, Framebuffer fb);
 
   char &ColorAt(int x, int y);
   float &DepthAt(int x, int y);
 
 private:
-  char color_[WIDTH][HEIGHT];
+  char color_[WIDTH + 1][HEIGHT];
   float depth_[WIDTH][HEIGHT];
 };
 
