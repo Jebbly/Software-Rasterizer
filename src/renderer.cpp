@@ -10,19 +10,98 @@ Renderer::Renderer(const std::string &filepath)
   // and look down the negative Z-axis
   camera_.TranslateX((max.x + min.x) / 2);
   camera_.TranslateY((max.y + min.y) / 2);
-  camera_.TranslateZ(max.z + 15);
+  camera_.TranslateZ(max.z + 25);
   camera_.RotateX(180);
+
+  // set controls
+  controller_.EnableRawInput();
+  rotation_speed_ = 0.5;
+  movement_speed_ = 0.1;
+
+  // find light position
+  light_position_.x = std::max(max.x, max.z) + 25;
+  light_position_.y = max.y + 5;
+  light_rotation_ = 45.0;
 }
 
 void Renderer::Run() {
   while (!close_) {
-    ProcessInput();
     Draw();
+    ProcessInput();
   }
 }
 
 void Renderer::ProcessInput() {
   // TO-DO: Process input for camera movement and closing the application
+  if (controller_.KeyboardHit()) {
+    char input = controller_.GetInput();
+
+    switch (input) {
+      case 'x': {
+        close_ = true;
+        buffer_.Clear();
+        buffer_.ResetScreen();
+        controller_.RestoreSettings();
+        break;
+      }
+      case 'w': {
+        camera_.TranslateZ(movement_speed_);
+        break;
+      }
+      case 's': {
+        camera_.TranslateZ(-movement_speed_);
+        break;
+      }
+      case 'e': {
+        camera_.TranslateY(movement_speed_);
+        break;
+      }
+      case 'q': {
+        camera_.TranslateY(-movement_speed_);
+        break;
+      }
+      case 'a': {
+        camera_.TranslateX(-movement_speed_);
+        break;
+      }
+      case 'd': {
+        camera_.TranslateX(movement_speed_);
+        break;
+      }
+      case 'i': {
+        camera_.RotateY(rotation_speed_);
+        break;
+      }
+      case 'k': {
+        camera_.RotateY(-rotation_speed_);
+        break;
+      }
+      case 'j': {
+        camera_.RotateX(-rotation_speed_);
+        break;
+      }
+      case 'l': {
+        camera_.RotateX(rotation_speed_);
+        break;
+      }
+      case '-': {
+        movement_speed_ = std::max(movement_speed_ - 0.1, 0.1);
+        break;
+      }
+      case '+': {
+        movement_speed_ += 0.1;
+        break;
+      }
+      case '[': {
+        light_rotation_ -= 5;
+        break;
+      }
+      case ']': {
+        light_rotation_ += 5;
+        break;
+      }
+    }
+  }
 }
 
 void Renderer::Draw() {
@@ -83,7 +162,7 @@ void Renderer::Draw() {
             depth += weights[i] * coords[i].z;
           }
 
-          if (depth < buffer_.DepthAt(x, y)) {
+          if (depth < buffer_.DepthAt(x, y) && depth > 0) {
             glm::vec3 position{0, 0, 0};
             for (size_t i = 0; i < 3; i++) {
               position += weights[i] * triangle[i].position;
@@ -138,7 +217,7 @@ float Renderer::EdgeFunction(const glm::vec2& v1, const glm::vec2& v2, const glm
 char Renderer::Shade(const glm::vec3& position, const glm::vec3& normal) const {
   // find how directly the triangle is pointing at the light source
   // light source currently is positioned at whereever the camera is
-  glm::vec3 light_pos = camera_.GetPosition();
+  glm::vec3 light_pos = glm::vec3(light_position_.x * sin(glm::radians(light_rotation_)), light_position_.y, light_position_.x * cos(glm::radians(light_rotation_)));
   glm::vec3 light_dir = glm::normalize(light_pos - position);
   float diffuse = std::clamp(glm::dot(normal, glm::normalize(light_dir)), 0.f, 1.f);
 

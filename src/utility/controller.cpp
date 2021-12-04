@@ -1,0 +1,43 @@
+#include "utility/controller.hpp"
+
+#if defined(_WIN32)
+
+Controller::Controller() = default;
+
+bool Controller::KeyboardHit() const { return kbhit(); }
+
+char Controller::GetInput() const { return getch(); }
+
+// by default, getch() does not print the 
+void Controller::EnableRawInput() const {}
+void Controller::RestoreSettings() const {}
+
+#elif defined(__linux__)
+
+Controller::Controller() {
+    tcgetattr(STDIN_FILENO, &old_settings_);
+}
+
+bool Controller::KeyboardHit() const {
+    int bytes;
+    ioctl(STDIN_FILENO, FIONREAD, &bytes);
+    return bytes > 0;
+}
+
+char Controller::GetInput() const {
+    char input;
+    read(STDIN_FILENO, &input, 1);
+    return input;
+}
+
+void Controller::EnableRawInput() const {
+    ConsoleMode raw_settings = old_settings_;
+    raw_settings.c_lflag &= ~(ECHO | ICANON);
+    tcsetattr(STDIN_FILENO, TCSANOW, &raw_settings);
+}    
+
+void Controller::RestoreSettings() const {
+    tcsetattr(STDIN_FILENO, TCSANOW, &old_settings_);
+}
+
+#endif

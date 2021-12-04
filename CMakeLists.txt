@@ -12,6 +12,7 @@ file(GLOB CPU_RASTERIZER_SOURCES
     src/geometry/vertex.cpp
     src/image/camera.cpp
     src/image/framebuffer.cpp
+    src/utility/controller.cpp
     src/renderer.cpp
 )
 

@@ -4,6 +4,7 @@
 #include "geometry/model.hpp"
 #include "image/camera.hpp"
 #include "image/framebuffer.hpp"
+#include "utility/controller.hpp"
 #include <glm/gtx/string_cast.hpp> 
 #include <iostream>
 #include <limits>
@@ -21,8 +22,13 @@ public:
 private:
   Model model_;
   Camera camera_;
+  Controller controller_;
   Framebuffer buffer_;
   bool close_;
+
+  float rotation_speed_, movement_speed_;
+  float light_rotation_;
+  glm::vec2 light_position_;
 
   void ProcessInput();
   void Draw();
