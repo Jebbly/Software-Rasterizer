@@ -86,9 +86,10 @@ TEST_CASE("Framebuffer", "[framebuffer]") {
 }
 
 TEST_CASE("Model", "[model]") {
-    std::filesystem::path object_path = std::filesystem::path(__FILE__).parent_path();
+    std::filesystem::path object_path =
+        std::filesystem::path(__FILE__).parent_path();
     object_path.append("test_object.obj");
-    Model test{object_path};
+    Model test{object_path.string()};
 
     SECTION("Vertex Extremes") {
         glm::vec3 max = test.GetMaxPosition();
@@ -106,19 +107,3 @@ TEST_CASE("Model", "[model]") {
         REQUIRE(CompareVectors(test.GetVertex(2).position, glm::vec3(0.087335, 1.551779, -1.542688)));
     }
 }
-
-/*
-TEST_CASE("Renderer", "[renderer]") {
-    Renderer renderer{"test"};
-    SECTION("Edge Function") {
-        glm::vec3 v1{0, 1, 5};
-        glm::vec3 v2{1, -1, 10};
-        glm::vec3 v3{-1, -1, -3};
-        glm::vec2 p{0, 0};
-
-        // REQUIRE(renderer.EdgeFunction(v1, v2, p) == 1.0);
-        // REQUIRE(renderer.EdgeFunction(v2, v3, p) == 2.0);
-        // REQUIRE(renderer.EdgeFunction(v3, v1, p) == 1.0);
-    }
-}
-*/
