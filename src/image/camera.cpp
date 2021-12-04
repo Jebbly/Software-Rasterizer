@@ -6,7 +6,7 @@ Camera::Camera(const glm::vec3 &position, float yaw, float pitch)
 }
 
 void Camera::RotateX(float magnitude) {
-  yaw_ += magnitude;
+  yaw_ -= magnitude;
   ComputeDirectionalVectors();
 }
 
@@ -40,8 +40,8 @@ void Camera::ComputeDirectionalVectors() {
 
   // use arbitrary vector to cross with direction to obtain right vector
   glm::vec3 world_up = glm::vec3(0.0f, 1.0f, 0.0f);
-  right_ = glm::normalize(glm::cross(world_up, front_));
+  right_ = glm::normalize(glm::cross(front_, world_up));
 
   // cross right and direction to obtain up vector
-  up_ = glm::cross(front_, right_);
+  up_ = glm::cross(right_, front_);
 }
