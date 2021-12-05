@@ -34,6 +34,14 @@ The application takes in a single argument which should contain the filepath of 
 
 If no argument is provided, the application will instead prompt the user to re-run the executable with an additional argument.
 
+When the application is running, the following options should be available:
+- ``WASD`` to move forward/backward and sideways
+- ``EQ`` to move up or down
+- ``IJKL`` to rotate up/down or side-to-side
+- ``[]`` to rotate the light around the object
+- ``+-`` to increase or decrease movement speed
+- ``X`` to close out of the application
+
 ## Testing
 
 The CMake should've also configured the Makefile to build to the test suite. Catch2 is used as the testing framework, and can be run by simply calling the executable:
