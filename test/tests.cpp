@@ -53,8 +53,8 @@ TEST_CASE("Camera", "[camera]") {
         camera.RotateX(90);
         camera.RotateY(30);
         glm::mat4 rotated_view = glm::lookAt(glm::vec3{0}, 
-                                             glm::vec3{cos(glm::radians(30.f)), sin(glm::radians(30.f)), 0}, 
-                                             glm::vec3{sin(glm::radians(30.f)), cos(glm::radians(30.f)), 0});
+                                             glm::vec3{-cos(glm::radians(30.f)), sin(glm::radians(30.f)), 0}, 
+                                             glm::vec3{-sin(glm::radians(30.f)), cos(glm::radians(30.f)), 0});
         REQUIRE(CompareMatrices(camera.GetViewMatrix(), rotated_view));
     }
 }

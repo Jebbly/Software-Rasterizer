@@ -10,8 +10,12 @@ Framebuffer::Framebuffer() {
   SetConsoleMode(hOut, dwMode);
 #endif
 
-  ResetScreen();
-  Clear();
+  for (int y = 0; y < HEIGHT; y++) {
+    for (int x = 0; x < WIDTH; x++) {
+      color_[y][x] = ' ';
+      depth_[y][x] = std::numeric_limits<float>::max();
+    }
+  }
 
   // by setting additional characters
   // the buffer can be printed all at once

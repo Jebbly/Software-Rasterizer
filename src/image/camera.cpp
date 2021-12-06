@@ -5,6 +5,8 @@ Camera::Camera(const glm::vec3 &position, float yaw, float pitch)
   ComputeDirectionalVectors();
 }
 
+// adding magnitude should rotate clockwise for the camera
+// but yaw technically increases counter-clockwise
 void Camera::RotateX(float magnitude) {
   yaw_ -= magnitude;
   ComputeDirectionalVectors();

@@ -22,6 +22,10 @@ Renderer::Renderer(const std::string &filepath)
   light_position_.x = std::max(max.x, max.z) + 25;
   light_position_.y = max.y + 5;
   light_rotation_ = 45.0;
+
+  // clear screen before printing
+  buffer_.Clear();
+  buffer_.ResetScreen();
 }
 
 void Renderer::Run() {
