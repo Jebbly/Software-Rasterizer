@@ -8,7 +8,8 @@ bool Controller::KeyboardHit() const { return kbhit(); }
 
 char Controller::GetInput() const { return getch(); }
 
-// by default, getch() does not print the 
+// by default, getch() does not echo the input or wait for enter
+// so raw input does not to be enabled
 void Controller::EnableRawInput() const {}
 void Controller::RestoreSettings() const {}
 
@@ -31,7 +32,7 @@ char Controller::GetInput() const {
 }
 
 void Controller::EnableRawInput() const {
-    ConsoleMode raw_settings = old_settings_;
+    struct termios raw_settings = old_settings_;
     raw_settings.c_lflag &= ~(ECHO | ICANON);
     tcsetattr(STDIN_FILENO, TCSANOW, &raw_settings);
 }    
