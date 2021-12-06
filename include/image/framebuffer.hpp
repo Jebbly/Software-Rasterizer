@@ -19,8 +19,10 @@ constexpr int CHARACTER_WIDTH = 8;
 constexpr int CHARACTER_HEIGHT = 16;
 constexpr float CHARACTER_ASPECT_RATIO = ((float) CHARACTER_HEIGHT) / CHARACTER_WIDTH;
 
-constexpr int WIDTH = 3200 / CHARACTER_WIDTH;
-constexpr int HEIGHT = 1600 / CHARACTER_HEIGHT;
+// the width/height can be increased
+// for terminals that support more characters
+constexpr int WIDTH = 800 / CHARACTER_WIDTH;
+constexpr int HEIGHT = 400 / CHARACTER_HEIGHT;
 
 class Framebuffer {
 public:
