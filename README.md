@@ -49,3 +49,7 @@ The CMake should've also configured the Makefile to build to the test suite. Cat
 ```
 ./tests
 ```
+
+## Credit
+
+This project was created by Jeffrey Liu, Paymon Sadat, and Chase Hari as part of UIUC's CS128 final project.
