@@ -42,6 +42,13 @@ When the application is running, the following options should be available:
 - ``+-`` to increase or decrease movement speed
 - ``X`` to close out of the application
 
+## Example
+
+When the project is built, a sample 3D model of [Suzanne the Blender Monkey](https://thegraphicassembly.com/suzanne-blender-monkey-model/) should be copied to the same directory as the executable. Alternatively, you can provide your own filepath to a custom OBJ file. Furthermore, when compiling, the ``WIDTH`` and ``HEIGHT`` dimensions on ``include/framebuffer.hpp`` can be edited according to the dimensions of the terminal.
+
+For example, you can change the font size and layout of the Windows terminal for a more high-resolution render:
+![Suzanne on Windows](samples/suzanne.png)
+
 ## Testing
 
 The CMake should've also configured the Makefile to build to the test suite. Catch2 is used as the testing framework, and can be run by simply calling the executable:
