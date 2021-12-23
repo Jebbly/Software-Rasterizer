@@ -57,6 +57,12 @@ The CMake should've also configured the Makefile to build to the test suite. Cat
 ./tests
 ```
 
+## Possible To-Do
+
+The Renderer class is a bit of a God class at the moment. It'd be more flexible to work with if the Controller, Model, and Camera classes were separated from the class and managed independently (perhaps using a Scene class to store Models and a Camera).
+
+It might also be interesting to implement some basic physics or collision detection and an audio library, to see how easily a simple game can be created.
+
 ## Credit
 
 This project was created by Jeffrey Liu, Paymon Sadat, and Chase Hari as part of UIUC's CS128 final project.
