@@ -65,8 +65,8 @@ TEST_CASE("Framebuffer", "[framebuffer]") {
     SECTION("Color Elements") {
         REQUIRE_THROWS(buffer.ColorAt(-1, 0));
         REQUIRE_THROWS(buffer.ColorAt(0, -1));
-        REQUIRE_THROWS(buffer.ColorAt(WIDTH, 0));
-        REQUIRE_THROWS(buffer.ColorAt(0, HEIGHT));
+        REQUIRE_THROWS(buffer.ColorAt(SCREEN_WIDTH, 0));
+        REQUIRE_THROWS(buffer.ColorAt(0, SCREEN_HEIGHT));
 
         buffer.ColorAt(0, 0) = 't';
         REQUIRE(buffer.ColorAt(0, 0) == 't');
@@ -76,8 +76,8 @@ TEST_CASE("Framebuffer", "[framebuffer]") {
     SECTION("Depth Elements") {
         REQUIRE_THROWS(buffer.DepthAt(-1, 0));
         REQUIRE_THROWS(buffer.DepthAt(0, -1));
-        REQUIRE_THROWS(buffer.DepthAt(WIDTH, 0));
-        REQUIRE_THROWS(buffer.DepthAt(0, HEIGHT));
+        REQUIRE_THROWS(buffer.DepthAt(SCREEN_WIDTH, 0));
+        REQUIRE_THROWS(buffer.DepthAt(0, SCREEN_HEIGHT));
 
         buffer.DepthAt(0, 0) = 1.0;
         REQUIRE(buffer.DepthAt(0, 0) == 1.0);

@@ -10,8 +10,8 @@ Framebuffer::Framebuffer() {
   SetConsoleMode(hOut, dwMode);
 #endif
 
-  for (int y = 0; y < HEIGHT; y++) {
-    for (int x = 0; x < WIDTH; x++) {
+  for (int y = 0; y < SCREEN_HEIGHT; y++) {
+    for (int x = 0; x < SCREEN_WIDTH; x++) {
       color_[y][x] = ' ';
       depth_[y][x] = std::numeric_limits<float>::max();
     }
@@ -19,11 +19,11 @@ Framebuffer::Framebuffer() {
 
   // by setting additional characters
   // the buffer can be printed all at once
-  for (int y = 0; y < HEIGHT; y++) {
-    color_[y][WIDTH] = '\n';
+  for (int y = 0; y < SCREEN_HEIGHT; y++) {
+    color_[y][SCREEN_WIDTH] = '\n';
   }
 
-  color_[HEIGHT - 1][WIDTH] = '\0';
+  color_[SCREEN_HEIGHT - 1][SCREEN_WIDTH] = '\0';
 }
 
 void Framebuffer::Display() const {
@@ -33,8 +33,8 @@ void Framebuffer::Display() const {
 void Framebuffer::Clear() {
   // clear color is a space character
   // depth should be set to the maximum possible value
-  for (int y = 0; y < HEIGHT; y++) {
-    for (int x = 0; x < WIDTH; x++) {
+  for (int y = 0; y < SCREEN_HEIGHT; y++) {
+    for (int x = 0; x < SCREEN_WIDTH; x++) {
       color_[y][x] = ' ';
       depth_[y][x] = std::numeric_limits<float>::max();
     }
@@ -48,17 +48,17 @@ void Framebuffer::ResetScreen() const {
 }
 
 char &Framebuffer::ColorAt(int x, int y) {
-  if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
+  if (x < 0 || x >= SCREEN_WIDTH || y < 0 || y >= SCREEN_HEIGHT) {
     throw std::runtime_error("Framebuffer color index out of bounds!");
   }
 
-  return color_[HEIGHT - 1 - y][x];
+  return color_[SCREEN_HEIGHT - 1 - y][x];
 }
 
 float &Framebuffer::DepthAt(int x, int y) {
-  if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
+  if (x < 0 || x >= SCREEN_WIDTH || y < 0 || y >= SCREEN_HEIGHT) {
     throw std::runtime_error("Framebuffer depth index out of bounds");
   }
 
-  return depth_[HEIGHT - 1 - y][x];
+  return depth_[SCREEN_HEIGHT - 1 - y][x];
 }

@@ -17,12 +17,14 @@ const std::string ESCAPE_SEQUENCE{"\e["};
 
 constexpr int CHARACTER_WIDTH = 8;
 constexpr int CHARACTER_HEIGHT = 16;
-constexpr float CHARACTER_ASPECT_RATIO = ((float) CHARACTER_HEIGHT) / CHARACTER_WIDTH;
+constexpr float CHARACTER_ASPECT_RATIO = ((float) CHARACTER_WIDTH) / CHARACTER_HEIGHT;
 
 // the width/height can be increased
 // for terminals that support more characters
-constexpr int WIDTH = 800 / CHARACTER_WIDTH;
-constexpr int HEIGHT = 400 / CHARACTER_HEIGHT;
+// as long as the ratio matches the camera film dimensions
+constexpr int SCREEN_WIDTH = 3200 / CHARACTER_WIDTH;
+constexpr int SCREEN_HEIGHT = 1600 / CHARACTER_HEIGHT;
+constexpr float SCREEN_ASPECT_RATIO = ((float) SCREEN_WIDTH) / SCREEN_HEIGHT;
 
 class Framebuffer {
 public:
@@ -38,8 +40,8 @@ public:
   float &DepthAt(int x, int y);
 
 private:
-  char color_[HEIGHT][WIDTH + 1];
-  float depth_[HEIGHT][WIDTH];
+  char color_[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+  float depth_[SCREEN_HEIGHT][SCREEN_WIDTH];
 };
 
 #endif // FRAMEBUFFER_HPP

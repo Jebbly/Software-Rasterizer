@@ -6,6 +6,16 @@ Renderer::Renderer(const std::string &filepath)
   glm::vec3 max = model_.GetMaxPosition();
   glm::vec3 min = model_.GetMinPosition();
 
+  // first compute the dimensions of the film canvas
+  top_ = NEAR_CLIPPING_PLANE * (FILM_HEIGHT / 2) / FOCAL_LENGTH;
+  right_ = NEAR_CLIPPING_PLANE * (FILM_WIDTH / 2) / FOCAL_LENGTH;
+
+  if (FILM_ASPECT_RATIO > SCREEN_ASPECT_RATIO) {
+    right_ *= SCREEN_ASPECT_RATIO / FILM_ASPECT_RATIO;
+  } else {
+    top_ *= FILM_ASPECT_RATIO / SCREEN_ASPECT_RATIO;
+  }
+
   // move to rough average of model
   // and look down the negative Z-axis
   camera_.TranslateX((max.x + min.x) / 2);
@@ -110,17 +120,19 @@ void Renderer::ProcessInput() {
 
 void Renderer::Draw() {
   const glm::mat4 view_matrix = camera_.GetViewMatrix();
+
   for (size_t tri_idx = 0; tri_idx < model_.GetIndexCount(); tri_idx += 3) {
     // compute the vertices of the triangle in camera space
     // then find their position in screen space
     // also keep track of the maximum and minimum screen coords
     Vertex triangle[3];
-    glm::vec2 min_coord{WIDTH, HEIGHT}, max_coord{0, 0};
+    glm::vec2 min_coord{SCREEN_WIDTH, SCREEN_HEIGHT}, max_coord{0, 0};
     glm::vec3 coords[3];
     for (size_t i = 0; i < 3; i++) {
       triangle[i] = view_matrix * model_.GetVertex(tri_idx + i);
       coords[i] = ProjectToScreenSpace(triangle[i].position);
       coords[i] = ScreenSpaceToNDC(coords[i]);
+      coords[i] = NDCToRasterSpace(coords[i]);
 
       // if triangle is used, re-adjust triangle boundaries
       if (coords[i].x < min_coord.x) {
@@ -128,7 +140,7 @@ void Renderer::Draw() {
       } 
       
       if (coords[i].x > max_coord.x) {
-        max_coord.x = std::min<float>(coords[i].x, WIDTH - 1);
+        max_coord.x = std::min<float>(coords[i].x, SCREEN_WIDTH - 1);
       }
 
       if (coords[i].y < min_coord.y) {
@@ -136,7 +148,7 @@ void Renderer::Draw() {
       }
       
       if (coords[i].y > max_coord.y) {
-        max_coord.y = std::min<float>(coords[i].y, HEIGHT - 1);
+        max_coord.y = std::min<float>(coords[i].y, SCREEN_HEIGHT - 1);
       }
     }
 
@@ -190,8 +202,8 @@ void Renderer::Draw() {
 // this function assumes that the vertex is already in camera space
 glm::vec3 Renderer::ProjectToScreenSpace(const glm::vec3& vertex) const {
   glm::vec3 projected_vertex;
-  projected_vertex.x = CHARACTER_ASPECT_RATIO * vertex.x / abs(vertex.z);
-  projected_vertex.y = vertex.y / abs(vertex.z);
+  projected_vertex.x = vertex.x / -vertex.z;
+  projected_vertex.y = CHARACTER_ASPECT_RATIO * vertex.y / -vertex.z;
   // TO-DO: better depth handling (involving clipping planes)
   projected_vertex.z = -vertex.z;
   projected_vertex *= FOCAL_LENGTH;
@@ -202,8 +214,17 @@ glm::vec3 Renderer::ProjectToScreenSpace(const glm::vec3& vertex) const {
 glm::vec3 Renderer::ScreenSpaceToNDC(const glm::vec3& coords) const {
   // max screen-space coords should depend on camera config
   glm::vec3 new_coords;
-  new_coords.x = coords.x + WIDTH/2;
-  new_coords.y = coords.y + HEIGHT/2;
+  new_coords.x = coords.x / right_;
+  new_coords.y = coords.y / top_;
+  new_coords.z = coords.z;
+  return new_coords;
+}
+
+// this function converts NDC coordinates to the raster space
+glm::vec3 Renderer::NDCToRasterSpace(const glm::vec3 &coords) const {
+  glm::vec3 new_coords;
+  new_coords.x = (coords.x + 1) / 2 * SCREEN_WIDTH;
+  new_coords.y = (coords.y + 1) / 2 * SCREEN_HEIGHT;
   new_coords.z = coords.z;
   return new_coords;
 }

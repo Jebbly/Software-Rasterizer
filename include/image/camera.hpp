@@ -9,6 +9,11 @@
 constexpr float TRANSLATION_SPEED = 1.0;
 constexpr float ROTATION_SPEED = 1.0;
 
+constexpr float FILM_WIDTH = 2;
+constexpr float FILM_HEIGHT = 1;
+constexpr float FILM_ASPECT_RATIO = FILM_WIDTH / FILM_HEIGHT;
+constexpr float FOCAL_LENGTH = 1;
+
 class Camera {
 public:
   Camera(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 0.0f), 
