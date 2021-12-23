@@ -13,7 +13,7 @@ Framebuffer::Framebuffer() {
   for (int y = 0; y < SCREEN_HEIGHT; y++) {
     for (int x = 0; x < SCREEN_WIDTH; x++) {
       color_[y][x] = ' ';
-      depth_[y][x] = std::numeric_limits<float>::max();
+      depth_[y][x] = FAR_CLIPPING_PLANE;
     }
   }
 
@@ -36,7 +36,7 @@ void Framebuffer::Clear() {
   for (int y = 0; y < SCREEN_HEIGHT; y++) {
     for (int x = 0; x < SCREEN_WIDTH; x++) {
       color_[y][x] = ' ';
-      depth_[y][x] = std::numeric_limits<float>::max();
+      depth_[y][x] = FAR_CLIPPING_PLANE;
     }
   }
 

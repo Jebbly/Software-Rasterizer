@@ -10,9 +10,6 @@
 #include <limits>
 #include <string>
 
-#define NEAR_CLIPPING_PLANE 0.1
-#define FAR_CLIPPING_PLANE 1000
-
 class Renderer {
 public:
   Renderer(const std::string &filepath);

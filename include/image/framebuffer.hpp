@@ -16,7 +16,7 @@ const std::string ESCAPE_SEQUENCE{"\e["};
 #endif
 
 constexpr int CHARACTER_WIDTH = 8;
-constexpr int CHARACTER_HEIGHT = 16;
+constexpr int CHARACTER_HEIGHT = 18;
 constexpr float CHARACTER_ASPECT_RATIO = ((float) CHARACTER_WIDTH) / CHARACTER_HEIGHT;
 
 // the width/height can be increased
@@ -25,6 +25,9 @@ constexpr float CHARACTER_ASPECT_RATIO = ((float) CHARACTER_WIDTH) / CHARACTER_H
 constexpr int SCREEN_WIDTH = 3200 / CHARACTER_WIDTH;
 constexpr int SCREEN_HEIGHT = 1600 / CHARACTER_HEIGHT;
 constexpr float SCREEN_ASPECT_RATIO = ((float) SCREEN_WIDTH) / SCREEN_HEIGHT;
+
+constexpr float NEAR_CLIPPING_PLANE = 0.1;
+constexpr float FAR_CLIPPING_PLANE = 1000;
 
 class Framebuffer {
 public:

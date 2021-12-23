@@ -20,7 +20,7 @@ Renderer::Renderer(const std::string &filepath)
   // and look down the negative Z-axis
   camera_.TranslateX((max.x + min.x) / 2);
   camera_.TranslateY((max.y + min.y) / 2);
-  camera_.TranslateZ(max.z + 25);
+  camera_.TranslateZ(max.z + 5);
   camera_.RotateX(180);
 
   // set controls
@@ -99,7 +99,7 @@ void Renderer::ProcessInput() {
         break;
       }
       case '-': {
-        movement_speed_ = std::max(movement_speed_ - 0.1, 0.1);
+        movement_speed_ = std::max(movement_speed_ - 0.05, 0.01);
         break;
       }
       case '+': {
@@ -120,7 +120,6 @@ void Renderer::ProcessInput() {
 
 void Renderer::Draw() {
   const glm::mat4 view_matrix = camera_.GetViewMatrix();
-
   for (size_t tri_idx = 0; tri_idx < model_.GetIndexCount(); tri_idx += 3) {
     // compute the vertices of the triangle in camera space
     // then find their position in screen space
@@ -129,8 +128,8 @@ void Renderer::Draw() {
     glm::vec2 min_coord{SCREEN_WIDTH, SCREEN_HEIGHT}, max_coord{0, 0};
     glm::vec3 coords[3];
     for (size_t i = 0; i < 3; i++) {
-      triangle[i] = view_matrix * model_.GetVertex(tri_idx + i);
-      coords[i] = ProjectToScreenSpace(triangle[i].position);
+      triangle[i] = model_.GetVertex(tri_idx + i);
+      coords[i] = ProjectToScreenSpace((view_matrix * triangle[i]).position);
       coords[i] = ScreenSpaceToNDC(coords[i]);
       coords[i] = NDCToRasterSpace(coords[i]);
 
@@ -152,6 +151,13 @@ void Renderer::Draw() {
       }
     }
 
+    // for now, skip any triangles that have vertices behind the camera
+    // the issue is that interpolation becomes messed up
+    // TO-DO: better clipping method
+    if (coords[0].z <= 0 || coords[1].z <= 0 || coords[2].z <= 0) {
+      continue;
+    }
+
     // only need to iterate through the bounding box of the triangle
     for (int y = min_coord.y; y <= max_coord.y; y++) {
       for (int x = min_coord.x; x <= max_coord.x; x++) {
@@ -161,8 +167,8 @@ void Renderer::Draw() {
         float weights[3];
         bool inside_triangle = true;
         for (size_t i = 0; i < 3; i++) {
-          weights[i] = EdgeFunction(coords[i], coords[(i + 1) % 3], pixel) + 0.0001;
-          if (weights[i] < 0) {
+          weights[i] = EdgeFunction(coords[(i + 1) % 3], coords[(i + 2) % 3], pixel);
+          if (weights[i] + 0.0001 < 0) {
             inside_triangle = false;
             break;
           }
@@ -175,18 +181,22 @@ void Renderer::Draw() {
           float depth = 0;
           for (size_t i = 0; i < 3; i++) {
             weights[i] /= area;
-            depth += weights[i] * coords[i].z;
+            depth += weights[i] * 1 / coords[i].z;
           }
+          depth = 1 / depth;
 
           if (depth < buffer_.DepthAt(x, y) && depth > 0) {
             glm::vec3 position{0, 0, 0};
             for (size_t i = 0; i < 3; i++) {
-              position += weights[i] * triangle[i].position;
+              position += weights[i] * triangle[i].position / coords[i].z;
             }
+
+            position *= depth;
 
             glm::vec3 normal =
                 glm::cross(triangle[1].position - triangle[0].position,
                            triangle[2].position - triangle[0].position);
+
             buffer_.ColorAt(x, y) = Shade(position, glm::normalize(normal));
             buffer_.DepthAt(x, y) = depth;
           }
@@ -204,9 +214,8 @@ glm::vec3 Renderer::ProjectToScreenSpace(const glm::vec3& vertex) const {
   glm::vec3 projected_vertex;
   projected_vertex.x = vertex.x / -vertex.z;
   projected_vertex.y = CHARACTER_ASPECT_RATIO * vertex.y / -vertex.z;
-  // TO-DO: better depth handling (involving clipping planes)
   projected_vertex.z = -vertex.z;
-  projected_vertex *= FOCAL_LENGTH;
+  projected_vertex *= NEAR_CLIPPING_PLANE;
   return projected_vertex;
 }
 
@@ -247,7 +256,8 @@ char Renderer::Shade(const glm::vec3& position, const glm::vec3& normal) const {
   float diffuse = std::clamp(glm::dot(normal, glm::normalize(light_dir)), 0.f, 1.f);
 
   // find the distance from the light source
-  float attenuation = 1 / (0.04 * glm::distance(light_pos, position));
+  float distance = glm::distance(light_pos, position);
+  float attenuation = 1 / (0.04 * distance);
 
   // index the ASCII palette according to brightness
   const std::string palette = " .:-=+*#%@";
