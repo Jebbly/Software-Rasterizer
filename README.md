@@ -46,7 +46,7 @@ When the application is running, the following options should be available:
 
 When the project is built, a sample 3D model of [Suzanne the Blender Monkey](https://thegraphicassembly.com/suzanne-blender-monkey-model/) should be copied to the same directory as the executable. Alternatively, you can provide your own filepath to a custom OBJ file. Furthermore, when compiling, the ``WIDTH`` and ``HEIGHT`` dimensions on ``include/framebuffer.hpp`` can be edited according to the dimensions of the terminal.
 
-For example, you can change the font size and layout of the Windows terminal for a more high-resolution render:
+For example, you can change the font size and layout of the Windows terminal for a more high-resolution render. The following screenshot is rendered in the Windows terminal with font size 6, width 633, and height 149:
 ![Suzanne on Windows](samples/suzanne.png)
 
 ## Testing
