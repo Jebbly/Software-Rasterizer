@@ -6,7 +6,7 @@ This project is a software rasterizer that is capable of displaying 3D models (.
 
 Since this project's dependencies are managed through Git submodules, the repository should be cloned with the ``--recursive`` flag:
 
-```git clone --recursive https://github.com/cs128-2021c/final-project-3d-renderers.git```
+```git clone --recursive https://github.com/Jebbly/Software-Rasterizer.git``
 
 This flag will recursively clone the libraries to their respective folders, where they will later be built as well.
 
